@@ -16,14 +16,21 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path
+from django.shortcuts import redirect
+from django.urls import include, path, reverse
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
 
+
+def home(request):
+    return redirect(reverse("swagger-ui"))
+
+
 urlpatterns = [
+    path("", home, name="home"),
     path("admin/", admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
@@ -33,4 +40,5 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/user/", include("user.urls")),
+    path("api/recipe/", include("recipe.urls")),
 ]

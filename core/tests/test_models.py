@@ -1,5 +1,9 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model  # type: ignore
 from django.test import TestCase  # type: ignore
+
+from core.models import Recipe
 
 
 class ModelTest(TestCase):
@@ -37,3 +41,17 @@ class ModelTest(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_recipe_success(self):
+        user = get_user_model().people.create_user(
+            email="user@example.com", password="testpass123"
+        )
+        payload = {
+            "user": user,
+            "title": "Demo Title",
+            "time_minutes": 5,
+            "price": Decimal("6.50"),
+            "description": "Some demo Description for Recipe.",
+        }
+        recipe = Recipe.objects.create(**payload)
+        self.assertEqual(str(recipe), payload["title"])

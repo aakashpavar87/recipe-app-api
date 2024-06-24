@@ -1,5 +1,6 @@
-"""Custom user model"""
+"""Models For Recipe App API."""
 
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -38,3 +39,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     people = UserManager()
 
     USERNAME_FIELD = "email"
+
+
+class Recipe(models.Model):
+    """Model for recipe."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    time_minutes = models.IntegerField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    description = models.CharField(max_length=255, blank=True)
+    link = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.title
