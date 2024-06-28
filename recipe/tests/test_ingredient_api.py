@@ -71,3 +71,21 @@ class PrivateIngredientApiTest(TestCase):
         self.assertNotIn(carrot, Ingredient.objects.filter(user=self.user))
         self.assertEqual(res.data[0]["name"], banana.name)
         self.assertEqual(res.data[0]["id"], banana.id)
+
+    def test_update_ingredient(self):
+        """Test updating ingredient."""
+        ingredient = Ingredient.objects.create(name="Turmeric", user=self.user)
+        payload = {"name": "Coriander"}
+        url = detail_url(ingredient.id)
+        res = self.client.patch(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        ingredient.refresh_from_db()
+        self.assertEqual(ingredient.name, payload["name"])
+
+    def test_delete_ingredient(self):
+        """Test deleteing ingredient."""
+        ingredient = Ingredient.objects.create(name="Turmeric", user=self.user)
+        url = detail_url(ingredient.id)
+        res = self.client.delete(url)
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Ingredient.objects.filter(name="Turmeric").exists())

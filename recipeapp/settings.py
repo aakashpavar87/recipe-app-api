@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import MEDIA_ROOT, MEDIA_URL, STATIC_ROOT
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -64,6 +66,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "REST api for food enthusiasts which is built in most popular rest framework of python.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
+    "COMPONENT_SPLIT_REQUEST": True,
 }
 
 ROOT_URLCONF = "recipeapp.urls"
@@ -136,7 +139,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/static/"
+
+MEDIA_URL = "/static/media/"
+
+STATIC_ROOT = "vol/web/static"
+
+MEDIA_ROOT = "vol/web/media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
