@@ -2,7 +2,7 @@
 Views for Recipes.
 """
 
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -34,7 +34,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
     authentication_classes = [TokenAuthentication]
@@ -43,6 +48,10 @@ class TagViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Retrieve Tags for authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by("-name")
+
+    # def perform_create(self, serializer):
+    #     """Set the user field to the authenticated user when creating a new tag."""
+    #     serializer.save(user=self.request.user)
 
     def perform_update(self, serializer):
         return super().perform_update(serializer)

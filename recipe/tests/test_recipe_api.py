@@ -12,7 +12,6 @@ from rest_framework.test import APIClient
 
 from core.models import Recipe, Tag
 from recipe.serializers import RecipeDetailSerializer, RecipeSerializer
-from recipe.tests.test_tag_api import detail_url
 
 RECIPE_URL = reverse("recipe:recipe-list")
 
@@ -235,15 +234,12 @@ class PrivateRecipeApiTests(TestCase):
         recipe = create_recipe(user=self.user)
         payload = {"tags": [{"name": "Dinner"}]}
         url = create_detail_url(recipe_id=recipe.id)
-        res = self.client.patch(url, payload)
+        res = self.client.patch(url, payload, format="json")
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        recipe.refresh_from_db()  # Refresh instance from the database
-        tags = Tag.objects.all()
-        new_tag = Tag.objects.filter(user=self.user, name="Dinner")
-        self.assertIn(new_tag, tags)
+        self.assertTrue(Tag.objects.filter(name="Dinner").exists())
 
-    def test_assigning_existed_tags_recipe(self):
+    def test_update_recipe_assigning_existed_tags(self):
         """Test assigning existed tags to recipes while update."""
         breakfast_tag = Tag.objects.create(user=self.user, name="breakfast")
         recipe = create_recipe(user=self.user)
@@ -251,10 +247,11 @@ class PrivateRecipeApiTests(TestCase):
 
         lunch_tag = Tag.objects.create(user=self.user, name="Lunch")
         payload = {"tags": [{"name": "Lunch"}]}
-        url = detail_url(recipe.id)
+        url = create_detail_url(recipe.id)
         res = self.client.patch(url, payload, format="json")
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
         recipe.refresh_from_db()  # Refresh instance from the database
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(lunch_tag, recipe.tags.all())
         self.assertNotIn(breakfast_tag, recipe.tags.all())
 
@@ -265,7 +262,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe.tags.add(breakfast_tag)
 
         payload = {"tags": []}
-        url = detail_url(recipe.id)
+        url = create_detail_url(recipe.id)
         res = self.client.patch(url, payload, format="json")
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
