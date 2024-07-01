@@ -83,7 +83,9 @@ class Recipe(models.Model):
     link = models.CharField(max_length=255, blank=True)
     tags = models.ManyToManyField("Tag")
     ingredients = models.ManyToManyField("Ingredient")
-    image = models.ImageField(null=True, upload_to=recipe_image_file_path)
+    image = models.ImageField(
+        upload_to=recipe_image_file_path, default="/uploads/recipe/rice.png"
+    )
 
     def __str__(self):
         return self.title
