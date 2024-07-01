@@ -368,6 +368,43 @@ class PrivateRecipeApiTests(TestCase):
         recipe.refresh_from_db()  # Refresh instance from the database
         self.assertEqual(recipe.tags.count(), 0)
 
+    def test_filter_recipe_by_tags(self):
+        """Filtering recipes by tags."""
+        r1 = create_recipe(user=self.user, title="Marathi Misal Pav")
+        r2 = create_recipe(user=self.user, title="Idli Sambhar")
+        tag1 = Tag.objects.create(user=self.user, name="Marathi")
+        tag2 = Tag.objects.create(user=self.user, name="South Indian")
+        r1.tags.add(tag1)
+        r2.tags.add(tag2)
+        params = {"tags": f"{tag1.id},{tag2.id}"}
+        r3 = create_recipe(user=self.user, title="Kashmiri Pulav")
+        res = self.client.get(RECIPE_URL, params)
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
+    def test_filter_recipe_by_ingredients(self):
+        """Filtering recipes by ingredients."""
+        r1 = create_recipe(user=self.user, title="Marathi Misal Pav")
+        r2 = create_recipe(user=self.user, title="Idli Sambhar")
+        ing1 = Ingredient.objects.create(user=self.user, name="Marathi Sev")
+        ing2 = Ingredient.objects.create(user=self.user, name="Dal")
+        r1.ingredients.add(ing1)
+        r2.ingredients.add(ing2)
+        params = {"ingredients": f"{ing1.id},{ing2.id}"}
+        r3 = create_recipe(user=self.user, title="Kashmiri Pulav")
+        res = self.client.get(RECIPE_URL, params)
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
 
 class ImageApiTests(TestCase):
     """Tests for Image Upload Handling."""
