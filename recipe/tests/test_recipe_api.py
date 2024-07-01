@@ -385,7 +385,7 @@ class ImageApiTests(TestCase):
     # ! TearDown Method 's code runs after the test execution.
     def tearDown(self):
         """Deleting image after test for clean up purpose."""
-        self.recipe.image.delete(save=False)
+        self.recipe.image.delete()
         shutil.rmtree(self.test_dir)
         super().tearDown()
 
