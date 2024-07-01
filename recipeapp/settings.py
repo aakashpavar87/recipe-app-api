@@ -153,3 +153,11 @@ MEDIA_ROOT = "vol/web/media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.User"
+
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+EMAIL_HOST_USER = "fa6ee143fcb6c4"
+EMAIL_HOST_PASSWORD = "b7dab47b4ee74d"
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = (
+    True  # Or EMAIL_USE_SSL = True, depending on your SMTP server configuration
+)

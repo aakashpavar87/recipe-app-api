@@ -45,6 +45,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, null=True)
+    otp_creation_time = models.DateTimeField(null=True)
 
     people = UserManager()
 
