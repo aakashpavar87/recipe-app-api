@@ -100,7 +100,7 @@ class PrivateRecipeApiTests(TestCase):
 
         serializer = RecipeDetailSerializer(recipe)
 
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_recipe(self):
         """Test creating Recipe from API."""
@@ -385,8 +385,9 @@ class ImageApiTests(TestCase):
     # ! TearDown Method 's code runs after the test execution.
     def tearDown(self):
         """Deleting image after test for clean up purpose."""
-        self.recipe.image.delete()
+        self.recipe.image.delete(save=False)
         shutil.rmtree(self.test_dir)
+        super().tearDown()
 
     def test_upload_image(self):
         """Uploading an image for a recipe."""

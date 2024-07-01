@@ -25,9 +25,7 @@ class Class_Name:
 
 def check_is_verified(user):
     """Check that user is verified or not."""
-    print("In Check Method")
     if not user.is_verified:
-        print("In Check Method")
         return {
             "message": "User is not verified. Please verify your account and try again."
         }

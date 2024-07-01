@@ -140,7 +140,6 @@ class CreateTokenView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        print(f"From User Views : {user}")
         request.session["user_id"] = user.id
 
         return Response(

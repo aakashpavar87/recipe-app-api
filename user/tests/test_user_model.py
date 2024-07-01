@@ -98,7 +98,10 @@ class PrivateUserTests(test.TestCase):
 
     def setUp(self):
         self.user = create_user(
-            email="user@example.com", password="testpass123", name="Test Name"
+            email="user@example.com",
+            password="testpass123",
+            name="Test Name",
+            is_verified=True,
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)

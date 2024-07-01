@@ -87,7 +87,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField("Tag")
     ingredients = models.ManyToManyField("Ingredient")
     image = models.ImageField(
-        upload_to=recipe_image_file_path, default="/uploads/recipe/rice.png"
+        upload_to=recipe_image_file_path, default="uploads/recipe/rice.png"
     )
 
     def __str__(self):
